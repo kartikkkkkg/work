@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Testimonials</title>
+  <style>
+    .label { background-color: #007BFF; color: white; padding: 5px 10px; border-radius: 5px; }
+    .btn { padding: 5px 10px; border: none; border-radius: 5px; margin-left: 5px; cursor: pointer; }
+    .submit-btn { background-color: #4CAF50; color: white; }
+    .edit-btn { background-color: #4CAF50; color: white; }
+    .delete-btn { background-color: #4CAF50; color: white; }
+    .testimonial-box { border: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+  <form id="testimonialForm">
+    <label class="label">Name</label>
+    <input type="text" id="name" placeholder="Your Name" required><br><br>
+
+    <label class="label">Message</label>
+    <input type="text" id="message" placeholder="Enter your Message" required><br><br>
+
+    <button type="submit" class="btn submit-btn">Submit</button>
+  </form>
+
+  <h3>Testimonials</h3>
+  <div id="testimonialList"></div>
+
+  <script>
+    const form = document.getElementById("testimonialForm");
+    const nameInput = document.getElementById("name");
+    const messageInput = document.getElementById("message");
+    const testimonialList = document.getElementById("testimonialList");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = nameInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !message) return;
+
+      addTestimonial(name, message);
+      form.reset();
+    });
+
+    function addTestimonial(name, message) {
+      const div = document.createElement("div");
+      div.className = "testimonial-box";
+
+      const content = document.createElement("p");
+      content.innerHTML = `<strong>${name}</strong><br>${message}`;
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "btn edit-btn";
+      editBtn.textContent = "Edit";
+      editBtn.onclick = function () {
+        nameInput.value = name;
+        messageInput.value = message;
+        testimonialList.removeChild(div);
+      };
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "btn delete-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = function () {
+        testimonialList.removeChild(div);
+      };
+
+      div.appendChild(content);
+      div.appendChild(editBtn);
+      div.appendChild(deleteBtn);
+
+      testimonialList.appendChild(div);
+    }
+  </script>
+
+</body>
+</html>
