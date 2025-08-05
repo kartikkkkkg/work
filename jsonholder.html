@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+
+  <div class="container">
+    <h3 class="mb-4">Presenting the Use Case on JSON</h3>
+
+    <div class="card p-4">
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name:</label>
+        <input type="text" class="form-control" id="firstName" placeholder="Enter First Name">
+      </div>
+
+      <div class="mb-3">
+        <label for="secondName" class="form-label">Second Name:</label>
+        <input type="text" class="form-control" id="secondName" placeholder="Enter Second Name">
+      </div>
+
+      <button class="btn btn-primary me-2" onclick="submitData()">Submit</button>
+      <button class="btn btn-info text-white" onclick="displayData()">Display JSON Data</button>
+
+      <pre id="jsonOutput" class="mt-4 bg-light p-3 border rounded"></pre>
+    </div>
+  </div>
+
+  <script>
+    let jsonArray = [];
+
+    function submitData() {
+      const first = document.getElementById('firstName').value.trim();
+      const second = document.getElementById('secondName').value.trim();
+
+      if (first && second) {
+        jsonArray.push({
+          FirstName: first,
+          LastName: second
+        });
+
+        // Optional: clear fields
+        document.getElementById('firstName').value = '';
+        document.getElementById('secondName').value = '';
+      } else {
+        alert("Please fill both fields!");
+      }
+    }
+
+    function displayData() {
+      document.getElementById('jsonOutput').textContent = JSON.stringify(jsonArray, null, 2);
+    }
+  </script>
+
+</body>
+</html>
