@@ -1,0 +1,28 @@
+US 01: 
+
+
+Source system (it generates the report) will tell our 	back end tool (RW TOOL) whenever a new file is ready. It tells this by sending a message with the reports details, like its name and where it’s located. 
+
+US 02:
+
+RW TOOL will listen to that message. When it gets the message it will automatically find the file and move it to a secure and permanent location!
+
+US 03:
+
+The ADMIN USER can set up sets of rules for different types of reports(for example they can create a rule for any report that is related to housing loans should go directly into the “Housing Loans”	 folder in the portal!
+
+Once all the rules are set the system will follow them automatically whenever a new report of the same kind arrives!
+
+
+US 04:SECURE ACCESS
+
+The system must use Active Directory (AD), the company’s directory
+
+An ADMIN USER will link specific user groups (eg Loan TEAM)) to specific folders in the portal!
+If a member of a LOAN Team in AD, it will automatically e able to see the reports in the Loan folder when logged in! And if users is not from Loan team they wont be able to do so!
+
+US 05: Real Time Alerts 
+
+Whenever the new report is processed or made available, OPS Users will get a notification. 
+
+
