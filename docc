@@ -1,0 +1,69 @@
+Based on the provided documents and images, here is a detailed breakdown of the components for each part of the application, categorized by whether they are static or dynamic.
+
+### Login Page
+This page is not explicitly detailed in the user stories but is a necessary component for a web portal with different user types.
+
+***
+
+#### Static Components
+* **Company Logo:** A static image of the company logo (Standard Chartered).
+* **Form Labels:** Text for "Username" and "Password" fields.
+* **"Sign In" Button:** A button with fixed text.
+
+#### Dynamic Components
+* **Input Fields:** Text fields for the user to enter their username and password. These are dynamic because the content changes based on user input.
+* **Error/Success Messages:** A text area that appears to show if the login was successful or if there was an error (e.g., "Invalid credentials").
+
+***
+
+### Admin Dashboard
+The user stories focus on the Admin User's ability to manage access for other users and groups. The dashboard would contain components to support these functionalities.
+
+***
+
+#### Static Components
+* **Sidebar Navigation:** A static list or tree-view of menu options for different administrative tasks.
+* **Table Headers:** Labels for columns in a user management table, such as "AD Group Name," "Folder," and "Report Name".
+
+#### Dynamic Components
+* **User/Group Management Table:** A table that populates with a dynamic list of Active Directory groups and the folders and reports they have access to. This data changes based on what has been configured.
+* **User Management Form:** A form with dynamic fields to edit or add a new user or group and set their permissions.
+* **Search Bar:** An input field to dynamically search for specific users or groups.
+
+***
+
+### Ops Dashboard
+This dashboard is designed for the Ops User to manage, download, and view reports. The user stories and the provided wireframe image give a clear view of its components.
+
+***
+
+#### Static Components
+* **Dashboard Title:** A title like "Reports Dashboard" or "Ops User Dashboard".
+* **Header and Footer:** The top navigation bar with the company logo, user details, and notification bell, as well as a footer for a document title.
+* **Sidebar Navigation:** A tree-view to navigate through different report folders.
+* **Column Headers:** Headers for the reports table, such as "Report Name," "Date," and "Actions".
+* **"Download Selected" Button:** A button with fixed text for bulk actions.
+
+#### Dynamic Components
+* **Report Table:** The main table that populates with a dynamic list of reports applicable to the user. This list is based on the user's permissions.
+* **Search Bar:** A search input that filters the report list dynamically as the user types.
+* **Date Filter:** A calendar or date range input that dynamically filters the reports shown in the table.
+* **Notifications:** An alert icon or a thumbnail notification on the desktop that appears when a new report is available.
+* **"Favorites" and "Last Viewed" Lists:** Dynamic lists in the sidebar that populate with reports the user has bookmarked or recently accessed.
+
+***
+
+### User Dashboard
+The User Dashboard is similar to the Ops Dashboard but with a focus on viewing and generating reports rather than management. The components would be largely the same as the Ops Dashboard, but with some key differences in functionality.
+
+***
+
+#### Static Components
+* **Header, Footer, and Sidebar:** These are static and consistent across all dashboards.
+* **Table Headers:** Same as the Ops Dashboard, with columns for "Report Name," "Date," and "Actions".
+
+#### Dynamic Components
+* **Report Table:** A dynamic list of reports populated based on the user’s permissions.
+* **Search and Filter:** The search bar and date filter will dynamically filter the report list.
+* **Favorites and Last Viewed:** Dynamic lists to store and display reports the user wants to access easily.
+* **Actions:** The "Actions" column would contain a dynamic link or button to **generate** and **download** a report, rather than just a simple download link for an already generated one.
