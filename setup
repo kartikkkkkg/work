@@ -1,38 +1,52 @@
-// src/App.js
-
+// frontend/src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css'; // This line imports Bootstrap CSS
 
-// A component for the Home page
-const HomePage = () => <h2>Home Page</h2>;
+// A component to test Bootstrap and navigation
+const TestPage = () => {
+  return (
+    <div>
+      <h2 className="text-primary mt-4">Bootstrap is Working!</h2>
+      <p>The text above should be blue.</p>
+      <Link to="/api-test" className="btn btn-success mt-3">Go to API Test</Link>
+    </div>
+  );
+};
 
-// A component for a basic data fetch
-const DataComponent = () => {
-  const [data, setData] = useState([]);
+// A component to test Axios
+const ApiTestPage = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Axios call to fetch data from an API
-    axios.get('https://jsonplaceholder.typicode.com/posts')
+    axios.get('https://jsonplaceholder.typicode.com/posts/1')
       .then(response => {
         setData(response.data);
       })
-      .catch(error => {
-        console.error('There was an error!', error);
+      .catch(err => {
+        setError(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
+  if (loading) return <p>Loading API data...</p>;
+  if (error) return <p>Error: API call failed.</p>;
+
   return (
-    <div>
-      <h3>Fetched Data</h3>
-      <ul className="list-group"> {/* Bootstrap list group */}
-        {data.slice(0, 5).map(item => (
-          <li key={item.id} className="list-group-item">
-            {item.title}
-          </li>
-        ))}
-      </ul>
+    <div className="card mt-4">
+      <div className="card-header bg-secondary text-white">
+        Axios is Working!
+      </div>
+      <div className="card-body">
+        <h5 className="card-title">{data.title}</h5>
+        <p className="card-text">{data.body}</p>
+        <Link to="/" className="btn btn-primary mt-3">Back to Home</Link>
+      </div>
     </div>
   );
 };
@@ -40,23 +54,10 @@ const DataComponent = () => {
 function App() {
   return (
     <Router>
-      <div className="container mt-4"> {/* Bootstrap container for centering */}
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link to="/" className="nav-link">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/data" className="nav-link">Data</Link>
-            </li>
-          </ul>
-        </nav>
-
-        <hr />
-
+      <div className="container mt-4">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/data" element={<DataComponent />} />
+          <Route path="/" element={<TestPage />} />
+          <Route path="/api-test" element={<ApiTestPage />} />
         </Routes>
       </div>
     </Router>
