@@ -401,3 +401,69 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+import React, { useState, useEffect } from 'react';
+import CustomerList from './components/customers/CustomerList';
+import CustomerForm from './components/customers/CustomerForm';
+import CustomerDetails from './components/customers/CustomerDetails';
+import customersData from './customers.json'; // Import the mock JSON data
+
+import './App.css'; // For the main layout and styling
+
+const App = () => {
+  // State to hold the list of all customers
+  const [customers, setCustomers] = useState([]);
+  
+  // State to hold the currently selected customer
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  // useEffect hook to load data on component mount
+  useEffect(() => {
+    // In a real application, you would fetch this data from an API.
+    // For this use case, we use the imported JSON file.
+    setCustomers(customersData);
+  }, []); // The empty dependency array [] ensures this runs only once on mount
+
+  // Handler function to add a new customer to the list
+  const handleAddCustomer = (newCustomer) => {
+    // Generate a new ID based on the last customer's ID
+    const newId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1;
+    const customerWithId = { ...newCustomer, id: newId };
+    
+    // Update the customers state with the new customer
+    setCustomers([...customers, customerWithId]);
+  };
+
+  // Handler function to set the selected customer when a list item is clicked
+  const handleCustomerSelect = (customer) => {
+    setSelectedCustomer(customer);
+  };
+
+  return (
+    <div className="App">
+      <header className="app-header">
+        <h1>Presenting Use Case 2</h1>
+      </header>
+      
+      <div className="content-wrapper">
+        <div className="customer-list-section">
+          <CustomerList 
+            customers={customers} 
+            onCustomerSelect={handleCustomerSelect} // Correct prop for the CustomerList
+          />
+        </div>
+        
+        <div className="form-details-section">
+          <CustomerForm 
+            onAddCustomer={handleAddCustomer} // Correct prop for the CustomerForm
+          />
+          <CustomerDetails 
+            customer={selectedCustomer} 
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
