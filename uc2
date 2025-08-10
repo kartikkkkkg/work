@@ -1,0 +1,236 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Add this line
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+index.js
+import React from 'react';
+
+const CustomerList = ({ customers, onCustomerSelect }) => {
+  return (
+    <div className="card">
+      <div className="card-header">
+        <h2 className="mb-0">Customers List</h2>
+      </div>
+      <div className="card-body">
+        <table className="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {customers.map(customer => (
+              <tr 
+                key={customer.id} 
+                onClick={() => onCustomerSelect(customer)}
+                style={{ cursor: 'pointer' }}
+              >
+                <td>{customer.id}</td>
+                <td>{customer.firstName}</td>
+                <td>{customer.lastName}</td>
+                <td>{customer.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default CustomerList;
+
+import React, { useState } from 'react';
+
+const CustomerForm = ({ onAddCustomer }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (firstName && lastName && email) {
+      const newCustomer = { firstName, lastName, email };
+      onAddCustomer(newCustomer);
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+    }
+  };
+
+  return (
+    <div className="card">
+      <div className="card-header">
+        <h2 className="mb-0">Add Customer</h2>
+      </div>
+      <div className="card-body">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="firstName" className="form-label">First Name</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              id="firstName" 
+              value={firstName} 
+              onChange={(e) => setFirstName(e.target.value)} 
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="lastName" className="form-label">Last Name</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              id="lastName" 
+              value={lastName} 
+              onChange={(e) => setLastName(e.target.value)} 
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input 
+              type="email" 
+              className="form-control" 
+              id="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CustomerForm;
+
+
+import React from 'react';
+
+const CustomerDetails = ({ customer }) => {
+  return (
+    <div className="card">
+      <div className="card-header">
+        <h2 className="mb-0">Customer Details</h2>
+      </div>
+      <div className="card-body">
+        {customer ? (
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item"><strong>ID:</strong> {customer.id}</li>
+            <li className="list-group-item"><strong>First Name:</strong> {customer.firstName}</li>
+            <li className="list-group-item"><strong>Last Name:</strong> {customer.lastName}</li>
+            <li className="list-group-item"><strong>Email:</strong> {customer.email}</li>
+          </ul>
+        ) : (
+          <div className="text-muted">Please select a customer from the list.</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CustomerDetails;
+
+
+
+import React, { useState, useEffect } from 'react';
+import CustomerList from './components/customers/CustomerList';
+import CustomerForm from './components/customers/CustomerForm';
+import CustomerDetails from './components/customers/CustomerDetails';
+import customersData from './customers.json';
+
+const App = () => {
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  useEffect(() => {
+    setCustomers(customersData);
+  }, []);
+
+  const handleAddCustomer = (newCustomer) => {
+    const newId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1;
+    const customerWithId = { ...newCustomer, id: newId };
+    setCustomers([...customers, customerWithId]);
+  };
+
+  const handleCustomerSelect = (customer) => {
+    setSelectedCustomer(customer);
+  };
+
+  return (
+    <div className="container mt-4">
+      <header className="text-center mb-4">
+        <h1 className="display-4">Presenting Use Case 2</h1>
+      </header>
+      
+      <div className="row g-4">
+        <div className="col-md-8">
+          <CustomerList 
+            customers={customers} 
+            onCustomerSelect={handleCustomerSelect} 
+          />
+        </div>
+        
+        <div className="col-md-4 d-flex flex-column gap-4">
+          <CustomerForm 
+            onAddCustomer={handleAddCustomer} 
+          />
+          <CustomerDetails 
+            customer={selectedCustomer} 
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+
+[
+  {
+    "id": 1,
+    "firstName": "Sundar",
+    "lastName": "Pichai",
+    "email": "sundar.pichai@google.com"
+  },
+  {
+    "id": 2,
+    "firstName": "Satya",
+    "lastName": "Nadella",
+    "email": "satya.nadella@microsoft.com"
+  },
+  {
+    "id": 3,
+    "firstName": "Jeff",
+    "lastName": "Bezos",
+    "email": "jeff.bezos@amazon.com"
+  },
+  {
+    "id": 4,
+    "firstName": "Sergey",
+    "lastName": "Brin",
+    "email": "sergey.brin@google.com"
+  },
+  {
+    "id": 5,
+    "firstName": "Larry",
+    "lastName": "Page",
+    "email": "larry.page@google.com"
+  }
+]
+
+
+
+
