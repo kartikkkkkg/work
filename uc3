@@ -1,0 +1,132 @@
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import HomePage from './pages/HomePage';
+import CustomersPage from './pages/CustomersPage';
+import AboutPage from './pages/AboutPage';
+import CustomerDetailsPage from './pages/CustomerDetailsPage';
+import CustomerFormPage from './pages/CustomerFormPage';
+
+import './App.css';
+
+function App() {
+  const [customers, setCustomers] = useState([]);
+
+  // Functions to handle CRUD operations on the 'customers' state will go here
+  const handleAddCustomer = (newCustomer) => { /* ... */ };
+  const handleEditCustomer = (updatedCustomer) => { /* ... */ };
+  const handleDeleteCustomer = (customerId) => { /* ... */ };
+
+  return (
+    <Router>
+      <div className="App">
+        <NavBar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/customers" element={
+              <CustomersPage customers={customers} onDelete={handleDeleteCustomer} />
+            } />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/customers/:id" element={<CustomerDetailsPage customers={customers} />} />
+            <Route path="/customers/new" element={<CustomerFormPage onSave={handleAddCustomer} />} />
+            <Route path="/customers/edit/:id" element={<CustomerFormPage onSave={handleEditCustomer} />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+
+
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import CustomerList from '../components/customers/CustomerList';
+import customersData from '../customers.json';
+
+const CustomersPage = ({ onDelete }) => {
+  const [customers, setCustomers] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // In a real app, you would fetch this data
+    setCustomers(customersData);
+  }, []);
+
+  const handleShow = (id) => {
+    navigate(`/customers/${id}`);
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/customers/edit/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      // Logic to delete the customer from state or an API
+      onDelete(id);
+    }
+  };
+
+  return (
+    <div className="customers-page">
+      <h2>Customers List</h2>
+      <Link to="/customers/new" className="create-link">Create new customer</Link>
+      <CustomerList 
+        customers={customers} 
+        onShow={handleShow} 
+        onEdit={handleEdit} 
+        onDelete={handleDelete} 
+      />
+    </div>
+  );
+};
+
+export default CustomersPage;
+
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import './NavBar.css';
+
+const NavBar = () => {
+  return (
+    <nav className="navbar">
+      <div className="bank-name">TopGuns Bank</div>
+      <div className="nav-links">
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/customers">Customers</NavLink>
+        <NavLink to="/about">About SCB</NavLink>
+      </div>
+    </nav>
+  );
+};
+
+export default NavBar;
+
+import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import CustomerDetails from '../components/customers/CustomerDetails';
+
+const CustomerDetailsPage = ({ customers }) => {
+  const { id } = useParams();
+  const customer = customers.find(c => c.id === parseInt(id));
+
+  if (!customer) {
+    return <h2>Customer not found.</h2>;
+  }
+
+  return (
+    <div className="customer-details-page">
+      <Link to="/customers" className="back-link">&lt; Back to Customer List</Link>
+      <CustomerDetails customer={customer} />
+    </div>
+  );
+};
+
+export default CustomerDetailsPage;
+
+
+
