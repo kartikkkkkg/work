@@ -130,3 +130,244 @@ export default CustomerDetailsPage;
 
 
 
+
+HomePage.js
+
+This file represents the main landing page of your application.
+
+JavaScript
+import React from 'react';
+
+const HomePage = () => {
+  return (
+    <div className="page-container">
+      <h2>Welcome to TopGuns Bank</h2>
+      <p>This is the home page of our customer management portal. Use the navigation bar above to view customer details, manage accounts, and learn more about our bank.</p>
+    </div>
+  );
+};
+
+export default HomePage;
+2. CustomersPage.js
+
+This page displays the list of all customers and includes the actions for CRUD operations. It will use the CustomerList component you already have.
+
+JavaScript
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import CustomerList from '../components/customers/CustomerList';
+import customersData from '../customers.json'; // Assuming this has been updated
+
+const CustomersPage = () => {
+  const [customers, setCustomers] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // In a real app, you would fetch data from an API here.
+    setCustomers(customersData);
+  }, []);
+
+  const handleShow = (id) => {
+    navigate(`/customers/${id}`);
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/customers/edit/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      setCustomers(customers.filter(customer => customer.id !== id));
+      // In a real app, you would send a DELETE request to an API
+    }
+  };
+
+  return (
+    <div className="page-container">
+      <h2>Customers List</h2>
+      <Link to="/customers/new" className="create-link">Create new customer</Link>
+      <CustomerList
+        customers={customers}
+        onShow={handleShow}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+    </div>
+  );
+};
+
+export default CustomersPage;
+3. AboutPage.js
+
+This file provides information about the bank.
+
+JavaScript
+import React from 'react';
+
+const AboutPage = () => {
+  return (
+    <div className="page-container">
+      <h2>About SCB</h2>
+      <p>SCB, a part of TopGuns Bank, is committed to providing excellent financial services to our customers. Our mission is to empower individuals and businesses through reliable banking solutions.</p>
+      <p>This application is a demonstration of our customer data management system, built using React.</p>
+    </div>
+  );
+};
+
+export default AboutPage;
+4. CustomerDetailsPage.js
+
+This page finds a single customer based on the URL parameter and displays their details.
+
+JavaScript
+import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import CustomerDetails from '../components/customers/CustomerDetails';
+import customersData from '../customers.json';
+
+const CustomerDetailsPage = () => {
+  const { id } = useParams();
+  const customer = customersData.find(c => c.id === parseInt(id));
+
+  if (!customer) {
+    return (
+      <div className="page-container">
+        <h2>Customer not found.</h2>
+        <Link to="/customers" className="back-link">&lt; Back to Customer List</Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page-container">
+      <Link to="/customers" className="back-link">&lt; Back to Customer List</Link>
+      <CustomerDetails customer={customer} />
+    </div>
+  );
+};
+
+export default CustomerDetailsPage;
+5. CustomerFormPage.js
+
+This page handles both creating a new customer and editing an existing one, based on the URL.
+
+JavaScript
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import CustomerForm from '../components/customers/CustomerForm';
+import customersData from '../customers.json';
+
+const CustomerFormPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [initialCustomer, setInitialCustomer] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      const customerToEdit = customersData.find(c => c.id === parseInt(id));
+      if (customerToEdit) {
+        setInitialCustomer(customerToEdit);
+      }
+    }
+  }, [id]);
+
+  const handleSave = (customerData) => {
+    if (id) {
+      // Logic for editing an existing customer
+      // In a real app, you'd send a PUT/PATCH request to an API
+      alert(`Customer ${id} updated!`);
+    } else {
+      // Logic for creating a new customer
+      // In a real app, you'd send a POST request to an API
+      alert('New customer created!');
+    }
+    navigate('/customers'); // Redirect back to the customer list
+  };
+
+  return (
+    <div className="page-container">
+      <Link to="/customers" className="back-link">&lt; Back to Customer List</Link>
+      <h2>{id ? 'Edit Customer' : 'Add Customer'}</h2>
+      <CustomerForm onSave={handleSave} initialData={initialCustomer} />
+    </div>
+  );
+};
+
+export default CustomerFormPage;
+
+[
+  {
+    "id": 1,
+    "firstName": "Sundar",
+    "lastName": "Pichai",
+    "email": "sundar.pichai@google.com",
+    "phone": "123-456-7890",
+    "accounts": [
+      {
+        "accountNo": "1001999",
+        "type": "SAVINGS ACCOUNT",
+        "branch": "Bellandur",
+        "balance": 1000
+      },
+      {
+        "accountNo": "1001998",
+        "type": "SAVINGS ACCOUNT",
+        "branch": "Indira Nagar",
+        "balance": 2000
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "firstName": "Satya",
+    "lastName": "Nadella",
+    "email": "satya.nadella@microsoft.com",
+    "phone": "987-654-3210",
+    "accounts": [
+      {
+        "accountNo": "2002123",
+        "type": "CHECKING ACCOUNT",
+        "branch": "BTM Layout",
+        "balance": 5000
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "firstName": "Jeff",
+    "lastName": "Bezos",
+    "email": "jeff.bezos@amazon.com",
+    "phone": "555-123-4567",
+    "accounts": [
+      {
+        "accountNo": "3003456",
+        "type": "SAVINGS ACCOUNT",
+        "branch": "Koramangala",
+        "balance": 15000
+      },
+      {
+        "accountNo": "3003457",
+        "type": "FIXED DEPOSIT",
+        "branch": "Koramangala",
+        "balance": 50000
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "firstName": "Sergey",
+    "lastName": "Brin",
+    "email": "sergey.brin@google.com",
+    "phone": "111-222-3333",
+    "accounts": []
+  },
+  {
+    "id": 5,
+    "firstName": "Larry",
+    "lastName": "Page",
+    "email": "larry.page@google.com",
+    "phone": "444-555-6666",
+    "accounts": []
+  }
+]
+
