@@ -1,0 +1,60 @@
+the components that will need to be common and reusable across multiple pages:
+
+1. Header Component
+
+This is the top navigation bar that will be consistent across all dashboards. It will likely include:
+
+The Standard Chartered logo and aXess ACADEMY branding.
+
+The user's information (name, login date).
+
+A notification icon (bell) and a search button.
+
+This component will be used on the AdminDashboard, OpsDashboard, and UserDashboard.
+
+2. Sidebar Component
+
+This component handles the left-side navigation and a few key features. It will likely include:
+
+A tree-view for navigating different report folders and categories (e.g., SCB, AML, General, Credit Admin).
+
+A section for Favorites and Last Viewed reports.
+
+This component will be used on the OpsDashboard and UserDashboard. While the AdminDashboard may have a different sidebar, you can still use the same component structure and pass different data to it.
+
+3. Search Bar
+
+This is a small, dynamic search input that appears on the right side of the screen and is used to filter reports. This component will be used on the OpsDashboard and UserDashboard.
+
+4. Report Table
+
+The main table that displays the reports will have a consistent structure, including columns for "Report Name," "Date," and "Actions". The data it displays, however, will be dynamic and depend on the user's permissions and selected filters. This component will be central to the OpsDashboard and UserDashboard.
+
+
+Frontend File Structure
+
+/frontend
+|
++-- /node_modules        <-- All installed packages
+|
++-- /public              <-- Static assets (index.html, favicon, etc.)
+|
++-- /src                 <-- Your application's source code
+|    +-- /components     <-- This is where you'll store all reusable components
+|    |    +-- Header.js          <-- Common header component
+|    |    +-- Footer.js          <-- Common footer component
+|    |    +-- Sidebar.js         <-- Common sidebar component
+|    |    +-- LoginPage.js
+|    |    +-- AdminDashboard.js
+|    |    +-- OpsDashboard.js
+|    |    +-- UserDashboard.js
+|    |    +-- ...
+|    +-- App.js          <-- Main component with routes
+|    +-- index.js        <-- The entry point of application
+|    +-- custom.css      <-- Custom theme and colors
+|    +-- ...
+|
++-- .gitignore
++-- package.json
++-- package-lock.json
++-- README.md
