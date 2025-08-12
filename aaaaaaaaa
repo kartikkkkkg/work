@@ -1,3 +1,54 @@
+public class Customer {
+    private int customerId;
+    private String customerName;
+    private String customerEmail;
+    private String customerContact;
+    private String accountType; // Savings or Current
+
+    // Constructor to initialize a new customer
+    public Customer(int customerId, String customerName, String customerEmail, String customerContact, String accountType) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerContact = customerContact;
+        this.accountType = accountType;
+    }
+
+    // Getters for all the fields
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public String getCustomerContact() {
+        return customerContact;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    // Overridden toString() method for easy printing of customer details
+    @Override
+    public String toString() {
+        return "Customer Id = " + customerId + ", Customer name = " + customerName + 
+               ", Customer email = " + customerEmail + ", Customer contact = " + customerContact +
+               ", Account type = " + accountType;
+    }
+}
+
+
+
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +58,7 @@ public class CustomerManager {
 
     public CustomerManager() {
         this.customers = new ArrayList<>();
-        // Add some initial data as shown in your image
+        // Add some initial data
         customers.add(new Customer(726, "Sandra", "sandra@gmail.com", "...", "Current"));
         customers.add(new Customer(1014, "Michelle", "michelle@gmail.com", "...", "Savings"));
         customers.add(new Customer(2480, "Steeve", "steeve@gmail.com", "...", "Savings"));
@@ -42,3 +93,112 @@ public class CustomerManager {
         return customers.removeIf(customer -> customer.getCustomerId() == customerId);
     }
 }
+
+
+
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.Optional;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        CustomerManager manager = new CustomerManager();
+        int choice;
+
+        System.out.println("Welcome to Standard Chartered Bank");
+
+        do {
+            // Display the menu to the user
+            System.out.println("\nBank Customer Management System");
+            System.out.println("Please enter your choice:");
+            System.out.println("1. for Add new Customer");
+            System.out.println("2. for Display Customers");
+            System.out.println("3. for Search Customer");
+            System.out.println("4. for Delete Customer");
+            System.out.println("5. for Exit the bank application");
+            
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                switch (choice) {
+                    case 1:
+                        // Add new customer with user-provided ID
+                        System.out.println("Please enter customer details:");
+                        System.out.print("Enter customer id: ");
+                        int customerId = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        
+                        System.out.print("Enter name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Enter contact: ");
+                        String contact = scanner.nextLine();
+                        System.out.print("Enter account type (Savings or Current): ");
+                        String accountType = scanner.nextLine();
+                        
+                        if (!accountType.equalsIgnoreCase("Savings") && !accountType.equalsIgnoreCase("Current")) {
+                            System.out.println("Invalid account type. Please try again.");
+                            break;
+                        }
+                        
+                        manager.addCustomer(customerId, name, email, contact, accountType);
+                        System.out.println("Customer added successfully with customer id " + customerId);
+                        break;
+
+                    case 2:
+                        // Display all customers
+                        System.out.println("\nDisplaying all existing customer details:");
+                        manager.displayAllCustomers();
+                        break;
+
+                    case 3:
+                        // Search for a customer by ID
+                        System.out.println("Please enter customer Id:");
+                        int searchId = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        
+                        Optional<Customer> foundCustomer = manager.searchCustomerById(searchId);
+                        if (foundCustomer.isPresent()) {
+                            System.out.println(foundCustomer.get());
+                        } else {
+                            System.out.println("Customer with Id " + searchId + " not found.");
+                        }
+                        break;
+                        
+                    case 4:
+                        // Delete a customer by ID
+                        System.out.println("Please enter the Customer Id to delete:");
+                        int deleteId = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        
+                        if (manager.deleteCustomerById(deleteId)) {
+                            System.out.println("Customer with Id " + deleteId + " has been successfully deleted.");
+                        } else {
+                            System.out.println("Customer with Id " + deleteId + " not found.");
+                        }
+                        break;
+                        
+                    case 5:
+                        // Exit the application
+                        System.out.println("Exiting the application. Thank you!");
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice. Please enter a number between 1 and 5.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear the invalid input from the scanner
+                choice = 0; // Reset choice to loop again
+            }
+
+        } while (choice != 5);
+
+        scanner.close();
+    }
+}
+
