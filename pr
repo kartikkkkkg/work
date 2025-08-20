@@ -1,0 +1,98 @@
+import { useState } from "react";
+import { fetchReportCard } from "../services/reportCardService"; // 👈 matches named export
+
+export default function ReportCardForm() {
+  const [form, setForm] = useState({
+    rollno: "",
+    name: "",
+    science: "",
+    maths: "",
+  });
+
+  const [result, setResult] = useState(null);
+
+  const onChange = (e) => {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      rollno: Number(form.rollno),
+      name: form.name,
+      science: Number(form.science),
+      maths: Number(form.maths),
+    };
+
+    try {
+      const { data, status } = await fetchReportCard(payload);
+      setResult({ ...data, status });
+    } catch (err) {
+      alert("Network error. Is Spring Boot running on :8080?");
+    }
+  };
+
+  return (
+    <div>
+      <h2>Report Card</h2>
+
+      <form onSubmit={onSubmit}>
+        <div>
+          <input
+            name="rollno"
+            placeholder="Roll No"
+            value={form.rollno}
+            onChange={onChange}
+          />
+        </div>
+        <div>
+          <input
+            name="name"
+            placeholder="Name"
+            value={form.name}
+            onChange={onChange}
+          />
+        </div>
+        <div>
+          <input
+            name="science"
+            placeholder="Science"
+            value={form.science}
+            onChange={onChange}
+          />
+        </div>
+        <div>
+          <input
+            name="maths"
+            placeholder="Maths"
+            value={form.maths}
+            onChange={onChange}
+          />
+        </div>
+
+        <button type="submit">Contact Spring</button>
+      </form>
+
+      {result && (
+        <div style={{ marginTop: 16 }}>
+          <div>Status Code: {result.status}</div>
+          <div>Roll No: {result.rollno}</div>
+          <div>Name: {result.name}</div>
+          <div>Grade: {result.grade}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/api/reportcard"; 
+// 👆 Change if your backend runs on a different URL/port
+
+// Named export
+export const fetchReportCard = (student) => {
+  return axios.post(API_URL, student);
+  // sending { rollno, name, science, maths } in request body
+};
