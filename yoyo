@@ -1,0 +1,81 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.Student;
+import com.example.demo.model.ReportCard;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/reportcard")
+public class ReportCardController {
+
+    @PostMapping("/generate")
+    public ResponseEntity<ReportCard> generateReportCard(@RequestBody Student student) {
+        String grade;
+
+        // Simple grading logic
+        if (student.getScience() > 75 && student.getMaths() > 75) {
+            grade = "Good";
+        } else {
+            grade = "Average";
+        }
+
+        ReportCard reportCard = new ReportCard(student.getRollno(), student.getName(), grade);
+
+        // Return HTTP status based on grade
+        if ("Good".equals(grade)) {
+            return new ResponseEntity<>(reportCard, HttpStatus.OK); // 200
+        } else {
+            return new ResponseEntity<>(reportCard, HttpStatus.NOT_ACCEPTABLE); // 406
+        }
+    }
+}
+package com.example.demo.model;
+
+public class ReportCard {
+    private int rollno;
+    private String name;
+    private String grade;
+
+    public ReportCard() {} // For JSON
+
+    public ReportCard(int rollno, String name, String grade) {
+        this.rollno = rollno;
+        this.name = name;
+        this.grade = grade;
+    }
+
+    // Getters & Setters
+    public int getRollno() { return rollno; }
+    public void setRollno(int rollno) { this.rollno = rollno; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getGrade() { return grade; }
+    public void setGrade(String grade) { this.grade = grade; }
+}
+package com.example.demo.model;
+
+public class Student {
+    private int rollno;
+    private String name;
+    private int science;
+    private int maths;
+
+    public Student() {} // Needed for JSON (deserialization)
+
+    // Getters & Setters
+    public int getRollno() { return rollno; }
+    public void setRollno(int rollno) { this.rollno = rollno; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public int getScience() { return science; }
+    public void setScience(int science) { this.science = science; }
+
+    public int getMaths() { return maths; }
+    public void setMaths(int maths) { this.maths = maths; }
+}
