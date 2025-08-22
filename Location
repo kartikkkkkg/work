@@ -113,6 +113,113 @@ INSERT INTO location (pincode, city, area) VALUES (500001, 'Hyderabad', 'Abids')
 
 
 
+------------------
+
+import axios from 'axios';
+
+const API_URL = "http://localhost:8080/api/locations";
+
+export const fetchLocationByPincode = (pincode) => {
+    return axios.get(`${API_URL}/${pincode}`);
+};
+
+export const fetchLocationsByCity = (city) => {
+    return axios.get(`${API_URL}/city/${city}`);
+};
+
+
+----------------------
+
+import React, { useState } from 'react';
+import { fetchLocationByPincode, fetchLocationsByCity } from './services/LocationService';
+
+const LocationFinder = () => {
+    const [pincode, setPincode] = useState('');
+    const [pincodeResult, setPincodeResult] = useState(null);
+    const [city, setCity] = useState('');
+    const [cityResults, setCityResults] = useState([]);
+
+    const handlePincodeSearch = async () => {
+        try {
+            const response = await fetchLocationByPincode(pincode);
+            setPincodeResult(response.data);
+            setCityResults([]);
+        } catch (error) {
+            console.error("Error fetching location by pincode:", error);
+            setPincodeResult({ message: "No location found for this pincode." });
+        }
+    };
+
+    const handleCitySearch = async () => {
+        try {
+            const response = await fetchLocationsByCity(city);
+            setCityResults(response.data);
+            setPincodeResult(null);
+        } catch (error) {
+            console.error("Error fetching locations by city:", error);
+            setCityResults([{ message: "No areas found for this city." }]);
+        }
+    };
+
+    return (
+        <div>
+            <h1>Location Finder</h1>
+
+            <div>
+                <h2>Find by Pincode</h2>
+                <input
+                    type="number"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                    placeholder="Enter Pincode"
+                />
+                <button onClick={handlePincodeSearch}>Search</button>
+
+                {pincodeResult && (
+                    <div>
+                        {pincodeResult.pincode ? (
+                            <p>City: {pincodeResult.city}, Area: {pincodeResult.area}</p>
+                        ) : (
+                            <p>{pincodeResult.message}</p>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            <hr />
+
+            <div>
+                <h2>Find by City</h2>
+                <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Enter City"
+                />
+                <button onClick={handleCitySearch}>Search</button>
+
+                {cityResults.length > 0 && (
+                    <div>
+                        <ul>
+                            {cityResults.map((loc) => (
+                                <li key={loc.pincode}>
+                                    Pincode: {loc.pincode}, Area: {loc.area}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default LocationFinder;
+
+
+
+
+
 
 
 
