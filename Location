@@ -1,0 +1,119 @@
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
+public class Location {
+
+    @Id
+    private Integer pincode;
+    private String city;
+    private String area;
+
+    public Location() {}
+
+    public Location(Integer pincode, String city, String area) {
+        this.pincode = pincode;
+        this.city = city;
+        this.area = area;
+    }
+
+    // Getters and Setters
+    public Integer getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(Integer pincode) {
+        this.pincode = pincode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+}
+
+
+--------
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface LocationRepository extends JpaRepository<Location, Integer> {
+    
+    List<Location> findByCity(String city);
+}
+
+
+-------------
+
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/locations")
+@CrossOrigin(origins = "http://localhost:3000")
+public class LocationController {
+
+    @Autowired
+    private LocationRepository locationRepository;
+
+    @GetMapping("/{pincode}")
+    public ResponseEntity<Location> getLocationByPincode(@PathVariable Integer pincode) {
+        Optional<Location> location = locationRepository.findById(pincode);
+        if (location.isPresent()) {
+            return ResponseEntity.ok(location.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/city/{city}")
+    public ResponseEntity<List<Location>> getLocationsByCity(@PathVariable String city) {
+        List<Location> locations = locationRepository.findByCity(city);
+        return ResponseEntity.ok(locations);
+    }
+}
+
+
+
+
+--------------
+CREATE TABLE location (
+    pincode INT PRIMARY KEY,
+    city VARCHAR(255) NOT NULL,
+    area VARCHAR(255) NOT NULL
+);
+
+
+
+---------------
+
+INSERT INTO location (pincode, city, area) VALUES (110001, 'Delhi', 'Connaught Place');
+INSERT INTO location (pincode, city, area) VALUES (400001, 'Mumbai', 'Fort');
+INSERT INTO location (pincode, city, area) VALUES (560001, 'Bengaluru', 'Shivajinagar');
+INSERT INTO location (pincode, city, area) VALUES (560002, 'Bengaluru', 'Koramangala');
+INSERT INTO location (pincode, city, area) VALUES (700001, 'Kolkata', 'Esplanade');
+INSERT INTO location (pincode, city, area) VALUES (600001, 'Chennai', 'George Town');
+INSERT INTO location (pincode, city, area) VALUES (500001, 'Hyderabad', 'Abids');
+
+
+
+
+
+
+
